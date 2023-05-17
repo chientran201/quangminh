@@ -8,28 +8,34 @@
                                                                      ~{:: #js-resources},
                                                                      ~{:: #main-content}
                                                                     )}">
+
 <head>
     <meta charset="UTF-8">
     <title>Thông tin giỏ hàng</title>
 <!--    <th:block id="css-resources">-->
-<!--        <style>-->
-<!--            .main-content .nav {-->
-<!--                grid-template-columns: 1fr 1fr 1fr 1fr 1fr;-->
-<!--            }-->
+        <style>
+            .main-content .nav {
+                grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            }
 
-<!--            @media (max-width: 767px) {-->
-<!--                .main-content .nav {-->
-<!--                    display: flex;-->
-<!--                    flex-wrap: nowrap;-->
-<!--                    overflow: scroll;-->
-<!--                }-->
-<!--                .main-content .nav-item {-->
-<!--                    white-space: nowrap;-->
-<!--                }-->
-<!--            }-->
-<!--        </style>-->
+            @media (max-width: 767px) {
+                .main-content .nav {
+                    display: flex;
+                    flex-wrap: nowrap;
+                    overflow: scroll;
+                }
+                .main-content .nav-item {
+                    white-space: nowrap;
+                }
+            }
+
+            .table-borderless tr {
+                margin: 12px 0;
+            }
+        </style>
         <link rel="stylesheet" th:href="@{/shop/css/custom.css}">
 <!--    </th:block>-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 
 <body>
@@ -44,93 +50,67 @@
                 <!-- <div class="table-main table-responsive" th:if="${check == null}" > -->
 
                     <div class="table-main table-responsive">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Images</th>
-                            <th>Product Name</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Total</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                         <tbody>
-                         <tr>
-                             <td class="thumbnail-img">
-                                 <a href="#">
-                                     <img class="img-fluid" src="http://localhost:8081/media/static/f317c4c0-7789-48d4-8a46-3c0fe7f19bc0.jpeg" />
-                                 </a>
-                             </td>
-                             <td class="name-pr">
-                                 <p>GIÀY NIKE JORDAN TRẺ EM DIOR MÀU GHI</p>
-                                 <p>Size: 35</p>
-                             </td>
-                             <td class="price-pr">
-                               <p>425000</p>
-                            </td>
-                             <form th:action="@{/update-cart}" method="post">
-                                 <input type="hidden" name="id" th:value="3">
-                                 <td class="quantity-box"><input type="number" size="4" th:value="1"
-                                                                 name="quantity" min="0" step="1"
-                                                                 class="c-input-text qty text"></td>
-                                 <td class="total-pr">
-                                     <p th:text="'$' + 425000"></p>
-                                 </td>
-                                 <td class="remove-pr">
-                                     <button type="submit" name="action" value="update" title="Update"
-                                             class="btn btn-primary">Update
-                                     </button>
-
-                                     <button type="submit" name="action" value="delete" title="Delete"
-                                             class="btn btn-warning">Delete
-                                     </button>
-                                 </td>
-                             </form>
-
-                         </tr>
-
+                        <table class="table">
+                            <thead>
+                            <tr style="margin: 12px 0">
+                                <th>Images</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="cartItem : ${shoppingCart.cartProduct}">
+                                <td class="thumbnail-img">
+                                    <a href="#">
+                                        <img class="img-fluid"
+                                             th:src="*{cartItem.product.images[0]}" alt=""/>
+                                    </a>
+                                </td>
+                                <td class="name-pr" style="vertical-align: middle !important;" >
+                                    <p th:text="${cartItem.product.name}"></p>
+                                    Size: <p style="display: inline-block" th:text="${cartItem.getSize()}"></p>
+                                </td>
+                                <td class="price-pr" style="vertical-align: middle !important;">
+                                    <p th:text="'$' + ${cartItem.product.getSalePrice()-150000}"></p>
+                                </td>
+                                <form th:action="@{/update-cart}" method="post">
+                                    <input type="hidden" name="id" th:value="${cartItem.product.id}" style="
+                                                text-align: center;
+                                                margin-bottom: 15px;
+                                            ">
+                                    <td class="quantity-box" style="vertical-align: middle !important;"><input type="number" style="
+                                                text-align: center;
+                                                margin-bottom: 15px;
+                                            "  size="4" th:value="${cartItem.quantity}"
+                                                                    name="quantity" min="0" step="1"
+                                                                    class="c-input-text qty text"></td>
+                                    <td class="total-pr middle" style="vertical-align: middle !important;">
+                                        <p th:text="'$' + ${cartItem.totalPrice}"></p>
+                                    </td>
+                                    <td class="remove-pr middle" style="vertical-align: middle !important;">
+                                        <button style="padding: 0 12px 0 0;border-radius:0px;border: none;background: #fff;cursor: pointer " type="submit" name="action" value="update" title="Update"
+                                                class=""><i class="fas fa-pencil-alt"></i>
+                                        </button>
 
 
-                                 <!--                        <tr th:each="cartItem : ${shoppingCart.cartProduct}">-->
-<!--                            <td class="thumbnail-img">-->
-<!--                                <a href="#">-->
-<!--                                    <img class="img-fluid"-->
-<!--                                         th:src="*{'data:image/jpeg;base64,' + cartItem.product.images}" alt=""/>-->
-<!--                                </a>-->
-<!--                            </td>-->
-<!--                            <td class="name-pr">-->
-<!--                                <p th:text="${cartItem.product.name}"></p>-->
-<!--                            </td>-->
-<!--                            <td class="price-pr">-->
-<!--                                <p th:text="'$' + ${cartItem.product.price}"></p>-->
-<!--                            </td>-->
-<!--                            <form th:action="@{/update-cart}" method="post">-->
-<!--                                <input type="hidden" name="id" th:value="${cartItem.product.id}">-->
-<!--                                <td class="quantity-box"><input type="number" size="4" th:value="${cartItem.quantity}"-->
-<!--                                                                name="quantity" min="0" step="1"-->
-<!--                                                                class="c-input-text qty text"></td>-->
-<!--                                <td class="total-pr">-->
-<!--                                    <p th:text="'$' + ${cartItem.totalPrice}"></p>-->
-<!--                                </td>-->
-<!--                                <td class="remove-pr">-->
-<!--                                    <button type="submit" name="action" value="update" title="Update"-->
-<!--                                            class="btn btn-primary">Update-->
-<!--                                    </button>-->
+                                        <a th:href="@{/delete-cartItem/__${cartItem.id}__}" class="delete-cart" th:data-id="${cartItem.id}"><button style="padding: 0px;border-radius: 0px;border: none;cursor: pointer" type="button" name="action" value="delete" title="Delete"
+                                                class=" "><i class="far fa-trash-alt"></i>
+                                        </button></a>
 
-<!--                                    <button type="submit" name="action" value="delete" title="Delete"-->
-<!--                                            class="btn btn-warning">Delete-->
-<!--                                    </button>-->
-<!--                                </td>-->
-<!--                            </form>-->
-<!--                        </tr>-->
-                        </tbody>
-                    </table>
+                                    </td>
+
+                                </form>
+                            </tr>
+                            </tbody>
+                        </table>
                 </div>
             </div>
         </div>
 
-        <!-- <div class="row my-5">
+         <div class="row my-5">
             <div class="col-lg-8 col-sm-12"></div>
             <div class="col-lg-4 col-sm-12">
                 <div class="order-box">
@@ -160,12 +140,13 @@
                     <hr>
                 </div>
             </div>
-            <div class="col-12 d-flex shopping-box"><a th:href="@{/check-out}" class="ml-auto btn hvr-hover">Checkout</a>
+            <div class="col-12 d-flex shopping-box"><a th:href="@{/dat-hang/__${cartId}__}" class="ml-auto btn hvr-hover">Checkout</a>
             </div>
-        </div> -->
+        </div>
 
     </div>
 </div>
+
 </main>
 
 </body>

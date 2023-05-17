@@ -20,9 +20,10 @@ public class CartProduct {
     @Column(name = "id")
     private Long id;
     private int quantity;
+    private int size;
     private double totalPrice;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
 

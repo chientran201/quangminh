@@ -115,10 +115,15 @@ public class HomeController {
     }
 
     @GetMapping("/dat-hang")
-    public String getCartPage(Model model, @RequestParam String id,@RequestParam int size){
+    public String getCartPage(Model model, @RequestParam(required = false) String id,@RequestParam(required = false) int size,@PathVariable(required = false) long cartid){
 
         //Lấy chi tiết sản phẩm
         DetailProductInfoDTO product;
+        if(id != null)
+            System.out.println("123");
+        else {
+            System.out.println("456");
+        }
         try {
             product = productService.getDetailProductById(id);
         } catch (NotFoundException ex) {
@@ -158,7 +163,6 @@ public class HomeController {
     public ResponseEntity<Object> createOrder(@Valid @RequestBody CreateOrderRequest createOrderRequest) {
         User user = ((CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser();
         Order order = orderService.createOrder(createOrderRequest, user.getId());
-
         return ResponseEntity.ok(order.getId());
     }
 

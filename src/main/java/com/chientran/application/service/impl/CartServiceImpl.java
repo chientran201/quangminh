@@ -8,9 +8,11 @@ import com.chientran.application.repository.CartProductRepository;
 import com.chientran.application.repository.CartRepository;
 import com.chientran.application.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -19,6 +21,12 @@ public class CartServiceImpl implements CartService {
     private CartProductRepository cartProductRepository;
     @Autowired
     private CartRepository cartRepository;
+
+
+    @Override
+    public Cart findByUserId(long id) {
+        return cartRepository.findCartByUserId(id);
+    }
 
     @Override
     public Cart addItemToCart(Product product, int quantity, User user) {
@@ -90,28 +98,32 @@ public class CartServiceImpl implements CartService {
         return cartRepository.save(cart);
     }
 
-    @Override
-    public Cart deleteItemFromCart(Product product, User user) {
-        Cart cart = user.getCart();
+//    @Override
+//    public Cart deleteItemFromCart(Product product, User user) {
+//        Cart cart = user.getCart();
+//
+//        Set<CartProduct> cartProducts = cart.getCartProduct();
+//
+//        CartProduct item = findCartProduct(cartProducts, product.getId());
+//
+//        cartProducts.remove(item);
+//
+//        cartRepository.delete(item);
+//
+//        double totalPrice = totalPrice(cartProducts);
+//        int totalItems = totalItems(cartProducts);
+//
+//        cart.setCartProduct(cartProducts);
+//        cart.setTotalItems(totalItems);
+//        cart.setTotalPrices(totalPrice);
+//
+//        return cartRepository.save(cart);
+//    }
 
-        Set<CartProduct> cartProducts = cart.getCartProduct();
 
-        CartProduct item = findCartProduct(cartProducts, product.getId());
 
-        cartProducts.remove(item);
 
-        cartProductRepository.delete(item);
-
-        double totalPrice = totalPrice(cartProducts);
-        int totalItems = totalItems(cartProducts);
-
-        cart.setCartProduct(cartProducts);
-        cart.setTotalItems(totalItems);
-        cart.setTotalPrices(totalPrice);
-
-        return cartRepository.save(cart);
-    }
-        private CartProduct findCartProduct(Set<CartProduct> cartProducts,String productId) {
+    private CartProduct findCartProduct(Set<CartProduct> cartProducts,String productId) {
             if (cartProducts == null) {
                 return null;
             }

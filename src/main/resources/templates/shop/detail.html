@@ -310,6 +310,20 @@
     <script th:src="@{/shop/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/shop/js/plugins.min.js}"></script>
 
+
+<!--    <script>-->
+<!--        document.getElementById('btn-add-cart').addEventListener("Click",function () {-->
+<!--            var user = "Hai";-->
+<!--            var xhr = new XMLHttpRequest();-->
+<!--            xhr.open("POST","/add-to-cart");-->
+<!--            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");-->
+<!--            xhr.onload = function () {-->
+<!--                // Xử lý phản hồi từ Server tại đây-->
+<!--            };-->
+<!--            xhr.send("username=" + user);-->
+<!--        })-->
+<!--    </script>-->
+
     <script th:inline="javascript">
         let price = [[${product.price}]];
 
@@ -402,11 +416,19 @@
 
 
             if (isLogined == true) {
-                let size = $('.size-choose').data("id");
+                 let size = $('.size-choose').data("id");
+                 let productId = [[${product.id}]];
                 if (size == null || size == "") {
                     toastr.warning("Sản phẩm tạm hết hàng. Vui lòng đặt hàng sau.");
                 } else {
-                    location.href = "/dat-hang?id="+[[${product.id}]]+"&size="+size;
+                    // $.ajax({
+                    //     url: '/add-to-cart',
+                    //     type: 'POST',
+                    //     data: productId,
+                    //     success: function(data) {
+                    //         // Xử lý dữ liệu trả về nếu có
+                    //     }})
+                     location.href = "/add-to-cart?id="+productId+"&size="+size;
                 }
             } else {
                 toastr.warning("Vui lòng đăng nhập để thêm vào giỏ");
@@ -415,6 +437,9 @@
                 }, 500);
             }
         })
+
+
+
         $("#formCommentProduct").submit(function (e) {
             e.preventDefault();
         }).validate({

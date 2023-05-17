@@ -154,6 +154,8 @@ function signedValidate(status = false, fullname = '') {
     }
 }
 
+
+
 $(document).on('keyup', function (e) {
     let target = e.target;
 
